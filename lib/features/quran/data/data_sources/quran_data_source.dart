@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:thawab/features/quran/data/models/quran_page_model.dart';
+import 'package:thawab/features/quran/data/models/quran_verse_model.dart';
 import 'package:thawab/features/quran/data/models/surah_model.dart';
 
 abstract class QuranDataSource {
@@ -42,7 +43,13 @@ class LocalQuranDataSource implements QuranDataSource {
       final surahNumber = int.parse(fields[0]);
       final verseNumber = int.parse(fields[1]);
       verseStartIndices['$surahNumber:$verseNumber'] = verses.length;
-      verses.add(_QuranVerse(text: fields[2]));
+      verses.add(
+        _QuranVerse(
+          surahNumber: surahNumber,
+          verseNumber: verseNumber,
+          text: fields[2],
+        ),
+      );
     }
 
     final pageStarts = _parsePageStarts(metadata, verseStartIndices);
@@ -58,7 +65,13 @@ class LocalQuranDataSource implements QuranDataSource {
           pageNumber: start.pageNumber,
           verses: verses
               .sublist(start.verseIndex, end)
-              .map((verse) => verse.text)
+              .map(
+                (verse) => QuranVerseModel(
+                  surahNumber: verse.surahNumber,
+                  verseNumber: verse.verseNumber,
+                  text: verse.text,
+                ),
+              )
               .toList(growable: false),
         ),
       );
@@ -118,8 +131,14 @@ class _QuranDataset {
 }
 
 class _QuranVerse {
-  const _QuranVerse({required this.text});
+  const _QuranVerse({
+    required this.surahNumber,
+    required this.verseNumber,
+    required this.text,
+  });
 
+  final int surahNumber;
+  final int verseNumber;
   final String text;
 }
 

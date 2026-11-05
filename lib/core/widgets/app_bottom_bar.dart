@@ -16,7 +16,7 @@ class AppBottomBar extends StatelessWidget {
     return NavigationBar(
       selectedIndex: index,
       onDestinationSelected: (destination) => context.go(switch (destination) {
-        AppNavigationIndex.quran => AppRoutes.kQuranReaderView,
+        AppNavigationIndex.quran => AppRoutes.kQuranIndexView,
         AppNavigationIndex.prayer => AppRoutes.kPrayerView,
         AppNavigationIndex.home => AppRoutes.kHomeView,
         AppNavigationIndex.azkar => AppRoutes.kAzkarView,

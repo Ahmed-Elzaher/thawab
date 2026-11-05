@@ -211,6 +211,18 @@ abstract class S {
   /// **'Quran surahs'**
   String get quranSurahs;
 
+  /// No description provided for @meccan.
+  ///
+  /// In en, this message translates to:
+  /// **'Meccan'**
+  String get meccan;
+
+  /// No description provided for @medinan.
+  ///
+  /// In en, this message translates to:
+  /// **'Medinan'**
+  String get medinan;
+
   /// No description provided for @surahCount.
   ///
   /// In en, this message translates to:
@@ -331,6 +343,12 @@ abstract class S {
   /// **'Reset counter'**
   String get resetCounter;
 
+  /// No description provided for @nextZikr.
+  ///
+  /// In en, this message translates to:
+  /// **'Next zikr'**
+  String get nextZikr;
+
   /// No description provided for @viewAll.
   ///
   /// In en, this message translates to:
@@ -367,6 +385,12 @@ abstract class S {
   /// **'Prayer times'**
   String get prayerTitle;
 
+  /// No description provided for @refreshPrayerTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh prayer times'**
+  String get refreshPrayerTimes;
+
   /// No description provided for @locationUnavailable.
   ///
   /// In en, this message translates to:
@@ -391,10 +415,46 @@ abstract class S {
   /// **'Today’s prayers'**
   String get todayPrayers;
 
+  /// No description provided for @fajr.
+  ///
+  /// In en, this message translates to:
+  /// **'Fajr'**
+  String get fajr;
+
+  /// No description provided for @sunrise.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunrise'**
+  String get sunrise;
+
+  /// No description provided for @dhuhr.
+  ///
+  /// In en, this message translates to:
+  /// **'Dhuhr'**
+  String get dhuhr;
+
+  /// No description provided for @asr.
+  ///
+  /// In en, this message translates to:
+  /// **'Asr'**
+  String get asr;
+
+  /// No description provided for @maghrib.
+  ///
+  /// In en, this message translates to:
+  /// **'Maghrib'**
+  String get maghrib;
+
+  /// No description provided for @isha.
+  ///
+  /// In en, this message translates to:
+  /// **'Isha'**
+  String get isha;
+
   /// No description provided for @prayerTimesUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'Prayer times will appear when a data source is connected.'**
+  /// **'Enable location and internet access to load prayer times and Qibla direction.'**
   String get prayerTimesUnavailable;
 
   /// No description provided for @qiblaDirection.
@@ -418,7 +478,7 @@ abstract class S {
   /// No description provided for @homeDailyUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'Today’s summary will appear when available.'**
+  /// **'Enable location and internet access to load today’s summary.'**
   String get homeDailyUnavailable;
 
   /// No description provided for @readingProgressUnavailable.

@@ -53,7 +53,7 @@ class HomeView extends StatelessWidget {
                   icon: Icons.menu_book,
                   title: strings.quranCardTitle,
                   subtitle: strings.quranCardSubtitle,
-                  onTap: () => context.push(AppRoutes.kQuranReaderView),
+                  onTap: () => context.push(AppRoutes.kQuranIndexView),
                 ),
                 HomeFeatureTile(
                   icon: Icons.explore_outlined,

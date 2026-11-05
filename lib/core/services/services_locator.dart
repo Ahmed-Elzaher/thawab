@@ -1,4 +1,8 @@
 import 'package:get_it/get_it.dart';
+import 'package:dio/dio.dart';
+import 'package:thawab/core/networking/api_consumer.dart';
+import 'package:thawab/core/networking/api_end_points.dart';
+import 'package:thawab/core/networking/dio_consumer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thawab/core/services/app_preferences_controller.dart';
 import 'package:thawab/features/azkar/data/data_sources/azkar_data_source.dart';
@@ -10,7 +14,11 @@ import 'package:thawab/features/home/data/data_sources/home_data_source.dart';
 import 'package:thawab/features/home/data/repositories/home_repository_impl.dart';
 import 'package:thawab/features/home/presentation/manager/home_cubit/home_cubit.dart';
 import 'package:thawab/features/home/domain/repositories/home_repository.dart';
+import 'package:thawab/features/quran/data/data_sources/quran_reading_progress_data_source.dart';
+import 'package:thawab/features/quran/data/repositories/quran_reading_progress_repository_impl.dart';
+import 'package:thawab/features/quran/domain/repositories/quran_reading_progress_repository.dart';
 import 'package:thawab/features/prayer/data/data_sources/prayer_data_source.dart';
+import 'package:thawab/features/prayer/data/data_sources/device_location_data_source.dart';
 import 'package:thawab/features/prayer/data/repositories/prayer_repository_impl.dart';
 import 'package:thawab/features/prayer/presentation/manager/prayer_cubit/prayer_cubit.dart';
 import 'package:thawab/features/prayer/domain/repositories/prayer_repository.dart';
@@ -32,8 +40,24 @@ Future<void> setupServiceLocator() async {
   await appPreferences.load();
   getIt.registerSingleton<AppPreferencesController>(appPreferences);
 
+  getIt.registerLazySingleton<Dio>(
+    () => Dio(
+      BaseOptions(
+        baseUrl: EndPoint.alAdhanBaseUrl,
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
+      ),
+    ),
+  );
+  getIt.registerLazySingleton<ApiConsumer>(() => DioConsumer(dio: getIt()));
+
   //! ========= Features - Content ==========
-  getIt.registerLazySingleton<HomeDataSource>(() => EmptyHomeDataSource());
+  getIt.registerLazySingleton<HomeDataSource>(
+    () => PrayerHomeDataSource(
+      prayerRepository: getIt(),
+      readingProgressRepository: getIt(),
+    ),
+  );
   getIt.registerLazySingleton<HomeRepository>(
     () => HomeRepositoryImpl(dataSource: getIt()),
   );
@@ -44,7 +68,23 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<SurahRepository>(
     () => SurahRepositoryImpl(dataSource: getIt()),
   );
-  getIt.registerLazySingleton<PrayerDataSource>(() => EmptyPrayerDataSource());
+  getIt.registerLazySingleton<QuranReadingProgressDataSource>(
+    () => SharedPreferencesQuranReadingProgressDataSource(
+      preferences: preferences,
+    ),
+  );
+  getIt.registerLazySingleton<QuranReadingProgressRepository>(
+    () => QuranReadingProgressRepositoryImpl(dataSource: getIt()),
+  );
+  getIt.registerLazySingleton<DeviceLocationDataSource>(
+    () => GeolocatorDataSource(),
+  );
+  getIt.registerLazySingleton<PrayerDataSource>(
+    () => AlAdhanPrayerDataSource(
+      apiConsumer: getIt(),
+      locationDataSource: getIt(),
+    ),
+  );
   getIt.registerLazySingleton<PrayerRepository>(
     () => PrayerRepositoryImpl(dataSource: getIt()),
   );
@@ -64,7 +104,8 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory<HomeCubit>(() => HomeCubit(repository: getIt()));
   getIt.registerFactory<QuranPageCubit>(
-    () => QuranPageCubit(repository: getIt()),
+    () =>
+        QuranPageCubit(repository: getIt(), readingProgressRepository: getIt()),
   );
   getIt.registerFactory<SurahCubit>(() => SurahCubit(repository: getIt()));
   getIt.registerFactory<PrayerCubit>(() => PrayerCubit(repository: getIt()));

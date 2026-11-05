@@ -6,8 +6,9 @@ class HomeDashboardModel extends HomeDashboardEntity {
     required super.nextPrayer,
     required super.prayerTime,
     required super.remainingTime,
-    required super.readingResume,
-    required super.readingProgress,
+    super.readingResume,
+    super.readingProgress,
+    super.readingPageNumber,
   });
 
   factory HomeDashboardModel.fromJson(Map<String, dynamic> json) =>
@@ -16,9 +17,11 @@ class HomeDashboardModel extends HomeDashboardEntity {
         nextPrayer: json[HomeDashboardModelKey.nextPrayer] as String,
         prayerTime: json[HomeDashboardModelKey.prayerTime] as String,
         remainingTime: json[HomeDashboardModelKey.remainingTime] as String,
-        readingResume: json[HomeDashboardModelKey.readingResume] as String,
-        readingProgress: (json[HomeDashboardModelKey.readingProgress] as num)
-            .toDouble(),
+        readingResume: json[HomeDashboardModelKey.readingResume] as String?,
+        readingProgress: (json[HomeDashboardModelKey.readingProgress] as num?)
+            ?.toDouble(),
+        readingPageNumber:
+            json[HomeDashboardModelKey.readingPageNumber] as int?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -28,6 +31,7 @@ class HomeDashboardModel extends HomeDashboardEntity {
     HomeDashboardModelKey.remainingTime: remainingTime,
     HomeDashboardModelKey.readingResume: readingResume,
     HomeDashboardModelKey.readingProgress: readingProgress,
+    HomeDashboardModelKey.readingPageNumber: readingPageNumber,
   };
 }
 
@@ -38,4 +42,5 @@ abstract class HomeDashboardModelKey {
   static const String remainingTime = 'remaining_time';
   static const String readingResume = 'reading_resume';
   static const String readingProgress = 'reading_progress';
+  static const String readingPageNumber = 'reading_page_number';
 }

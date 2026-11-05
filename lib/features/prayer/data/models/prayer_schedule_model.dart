@@ -4,6 +4,7 @@ import 'package:thawab/features/prayer/domain/entities/prayer_schedule_entity.da
 class PrayerScheduleModel extends PrayerScheduleEntity {
   const PrayerScheduleModel({
     required super.location,
+    required super.hijriDate,
     required super.nextPrayerLabel,
     required super.countdown,
     required List<PrayerTimeModel> prayers,
@@ -13,6 +14,7 @@ class PrayerScheduleModel extends PrayerScheduleEntity {
   factory PrayerScheduleModel.fromJson(Map<String, dynamic> json) =>
       PrayerScheduleModel(
         location: json[PrayerScheduleModelKey.location] as String,
+        hijriDate: json[PrayerScheduleModelKey.hijriDate] as String,
         nextPrayerLabel: json[PrayerScheduleModelKey.nextPrayerLabel] as String,
         countdown: json[PrayerScheduleModelKey.countdown] as String,
         prayers: (json[PrayerScheduleModelKey.prayers] as List<dynamic>)
@@ -25,6 +27,7 @@ class PrayerScheduleModel extends PrayerScheduleEntity {
 
   Map<String, dynamic> toJson() => {
     PrayerScheduleModelKey.location: location,
+    PrayerScheduleModelKey.hijriDate: hijriDate,
     PrayerScheduleModelKey.nextPrayerLabel: nextPrayerLabel,
     PrayerScheduleModelKey.countdown: countdown,
     PrayerScheduleModelKey.prayers: prayers
@@ -36,6 +39,7 @@ class PrayerScheduleModel extends PrayerScheduleEntity {
 
 abstract class PrayerScheduleModelKey {
   static const String location = 'location';
+  static const String hijriDate = 'hijri_date';
   static const String nextPrayerLabel = 'next_prayer_label';
   static const String countdown = 'countdown';
   static const String prayers = 'prayers';

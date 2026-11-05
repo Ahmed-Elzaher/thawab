@@ -10,6 +10,15 @@ class PrayerRepositoryImpl implements PrayerRepository {
   final PrayerDataSource dataSource;
 
   @override
-  Future<Either<Failure, List<PrayerScheduleEntity>>> fetch() async =>
-      Right<Failure, List<PrayerScheduleEntity>>(await dataSource.fetch());
+  Future<Either<Failure, List<PrayerScheduleEntity>>> fetch() async {
+    try {
+      return Right<Failure, List<PrayerScheduleEntity>>(
+        await dataSource.fetch(),
+      );
+    } on Object {
+      return const Left<Failure, List<PrayerScheduleEntity>>(
+        DataSourceUnavailableFailure(),
+      );
+    }
+  }
 }

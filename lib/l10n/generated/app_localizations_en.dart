@@ -67,6 +67,12 @@ class SEn extends S {
   String get quranSurahs => 'Quran surahs';
 
   @override
+  String get meccan => 'Meccan';
+
+  @override
+  String get medinan => 'Medinan';
+
+  @override
   String surahCount(int count) {
     return '$count surahs';
   }
@@ -140,6 +146,9 @@ class SEn extends S {
   String get resetCounter => 'Reset counter';
 
   @override
+  String get nextZikr => 'Next zikr';
+
+  @override
   String get viewAll => 'View all';
 
   @override
@@ -158,6 +167,9 @@ class SEn extends S {
   String get prayerTitle => 'Prayer times';
 
   @override
+  String get refreshPrayerTimes => 'Refresh prayer times';
+
+  @override
   String get locationUnavailable => 'Location unavailable';
 
   @override
@@ -171,8 +183,26 @@ class SEn extends S {
   String get todayPrayers => 'Today’s prayers';
 
   @override
+  String get fajr => 'Fajr';
+
+  @override
+  String get sunrise => 'Sunrise';
+
+  @override
+  String get dhuhr => 'Dhuhr';
+
+  @override
+  String get asr => 'Asr';
+
+  @override
+  String get maghrib => 'Maghrib';
+
+  @override
+  String get isha => 'Isha';
+
+  @override
   String get prayerTimesUnavailable =>
-      'Prayer times will appear when a data source is connected.';
+      'Enable location and internet access to load prayer times and Qibla direction.';
 
   @override
   String get qiblaDirection => 'Qibla direction';
@@ -185,7 +215,7 @@ class SEn extends S {
 
   @override
   String get homeDailyUnavailable =>
-      'Today’s summary will appear when available.';
+      'Enable location and internet access to load today’s summary.';
 
   @override
   String get readingProgressUnavailable =>

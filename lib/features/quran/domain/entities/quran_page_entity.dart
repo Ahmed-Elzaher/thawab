@@ -1,3 +1,5 @@
+import 'package:thawab/features/quran/domain/entities/quran_verse_entity.dart';
+
 class QuranPageEntity {
   const QuranPageEntity({
     required this.surahName,
@@ -7,5 +9,5 @@ class QuranPageEntity {
 
   final String surahName;
   final int pageNumber;
-  final List<String> verses;
+  final List<QuranVerseEntity> verses;
 }

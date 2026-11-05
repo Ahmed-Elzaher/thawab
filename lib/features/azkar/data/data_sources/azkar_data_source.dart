@@ -46,6 +46,7 @@ class LocalAzkarDataSource implements AzkarDataSource {
         final zikr = item as Map<String, dynamic>;
         sessions.add(
           ZikrSessionModel(
+            categoryId: entry.key,
             text: zikr[HisnAlMuslimKey.text] as String,
             target: (zikr[HisnAlMuslimKey.count] as num).toInt(),
           ),

@@ -67,6 +67,12 @@ class SAr extends S {
   String get quranSurahs => 'سور القرآن الكريم';
 
   @override
+  String get meccan => 'مكية';
+
+  @override
+  String get medinan => 'مدنية';
+
+  @override
   String surahCount(int count) {
     return '$count سورة';
   }
@@ -138,6 +144,9 @@ class SAr extends S {
   String get resetCounter => 'إعادة العداد';
 
   @override
+  String get nextZikr => 'الذكر التالي';
+
+  @override
   String get viewAll => 'عرض الكل';
 
   @override
@@ -156,6 +165,9 @@ class SAr extends S {
   String get prayerTitle => 'مواقيت الصلاة';
 
   @override
+  String get refreshPrayerTimes => 'تحديث المواقيت';
+
+  @override
   String get locationUnavailable => 'الموقع غير متاح';
 
   @override
@@ -168,7 +180,26 @@ class SAr extends S {
   String get todayPrayers => 'مواقيت اليوم';
 
   @override
-  String get prayerTimesUnavailable => 'ستظهر مواقيت الصلاة بعد ربط مصدرها.';
+  String get fajr => 'الفجر';
+
+  @override
+  String get sunrise => 'الشروق';
+
+  @override
+  String get dhuhr => 'الظهر';
+
+  @override
+  String get asr => 'العصر';
+
+  @override
+  String get maghrib => 'المغرب';
+
+  @override
+  String get isha => 'العشاء';
+
+  @override
+  String get prayerTimesUnavailable =>
+      'فعّل الموقع والإنترنت لتحميل مواقيت الصلاة واتجاه القبلة.';
 
   @override
   String get qiblaDirection => 'اتجاه القبلة';
@@ -180,7 +211,7 @@ class SAr extends S {
   String get homeSpaces => 'مساحات ثواب';
 
   @override
-  String get homeDailyUnavailable => 'ستظهر بيانات اليوم بعد تحميلها.';
+  String get homeDailyUnavailable => 'فعّل الموقع والإنترنت لعرض ملخص اليوم.';
 
   @override
   String get readingProgressUnavailable => 'سيظهر تقدم القراءة بعد تحميله.';

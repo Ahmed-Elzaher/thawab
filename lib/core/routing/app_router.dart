@@ -38,6 +38,7 @@ abstract final class AppRouter {
             surah: state.extra is SurahEntity
                 ? state.extra! as SurahEntity
                 : null,
+            initialPageNumber: state.extra is int ? state.extra! as int : null,
           ),
         ),
       ),
@@ -71,12 +72,18 @@ abstract final class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.kAzkarCategoriesView,
-        builder: (_, state) => BlocProvider(
-          create: (_) => getIt<AzkarCategoriesCubit>()..fetch(),
+        builder: (_, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => getIt<AzkarCategoriesCubit>()..fetch()),
+            BlocProvider(create: (_) => getIt<ZikrSessionCubit>()..fetch()),
+          ],
           child: AzkarCategoriesView(
             categories: state.extra is List<AzkarCategoryEntity>
                 ? state.extra! as List<AzkarCategoryEntity>
                 : const [],
+            selectedCategory: state.extra is AzkarCategoryEntity
+                ? state.extra! as AzkarCategoryEntity
+                : null,
           ),
         ),
       ),

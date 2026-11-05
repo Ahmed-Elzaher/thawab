@@ -105,12 +105,17 @@ class _QuranIndexViewState extends State<QuranIndexView> {
                             children: [
                               Text(
                                 surah.name,
+                                textDirection: TextDirection.rtl,
                                 style: Theme.of(context).textTheme.titleLarge
                                     ?.copyWith(fontWeight: FontWeight.w700),
                               ),
                               SizedBox(height: 4.h),
                               Text(
-                                '${surah.revelationType} · ${strings.verseCount(surah.verseCount)}',
+                                '${switch (surah.revelationType) {
+                                  'Meccan' => strings.meccan,
+                                  'Medinan' => strings.medinan,
+                                  _ => surah.revelationType,
+                                }} · ${strings.verseCount(surah.verseCount)}',
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(
                                       color: Theme.of(context)

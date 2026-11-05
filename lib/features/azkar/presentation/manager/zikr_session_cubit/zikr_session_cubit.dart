@@ -24,6 +24,19 @@ class ZikrSessionCubit extends Cubit<ZikrSessionState> {
     }
   }
 
+  void nextSession() {
+    final currentState = state;
+    if (currentState is ZikrSessionSuccess && currentState.items.isNotEmpty) {
+      emit(
+        currentState.copyWith(
+          activeIndex:
+              (currentState.activeIndex + 1) % currentState.items.length,
+          count: 0,
+        ),
+      );
+    }
+  }
+
   Future<void> fetch() async {
     emit(ZikrSessionLoading());
     final result = await repository.fetch();

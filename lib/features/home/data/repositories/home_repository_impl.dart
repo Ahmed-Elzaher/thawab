@@ -10,6 +10,15 @@ class HomeRepositoryImpl implements HomeRepository {
   final HomeDataSource dataSource;
 
   @override
-  Future<Either<Failure, List<HomeDashboardEntity>>> fetch() async =>
-      Right<Failure, List<HomeDashboardEntity>>(await dataSource.fetch());
+  Future<Either<Failure, List<HomeDashboardEntity>>> fetch() async {
+    try {
+      return Right<Failure, List<HomeDashboardEntity>>(
+        await dataSource.fetch(),
+      );
+    } on Object {
+      return const Left<Failure, List<HomeDashboardEntity>>(
+        DataSourceUnavailableFailure(),
+      );
+    }
+  }
 }

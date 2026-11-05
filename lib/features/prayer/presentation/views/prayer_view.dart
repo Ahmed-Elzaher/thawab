@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thawab/l10n/generated/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:thawab/core/routing/app_routes.dart';
+import 'package:thawab/core/functions/localize_prayer_name.dart';
 import 'package:thawab/core/utils/app_navigation_index.dart';
 import 'package:thawab/core/utils/app_spacing.dart';
 import 'package:thawab/features/prayer/presentation/manager/prayer_cubit/prayer_cubit.dart';
@@ -24,16 +25,29 @@ class PrayerView extends StatelessWidget {
       final loadedSchedule = state is PrayerSuccess && state.items.isNotEmpty
           ? state.items.first
           : schedule;
+      final localizedNextPrayer = loadedSchedule == null
+          ? strings.nextPrayer
+          : localizePrayerName(strings, loadedSchedule.nextPrayerLabel);
       return AppScreen(
         title: strings.prayerTitle,
         bottomNavigationBar: const AppBottomBar(
           index: AppNavigationIndex.prayer,
         ),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
-        action: IconButton(
-          tooltip: strings.settings,
-          onPressed: () => context.push(AppRoutes.kSettingsView),
-          icon: const Icon(Icons.tune),
+        action: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              tooltip: strings.refreshPrayerTimes,
+              onPressed: () => context.read<PrayerCubit>().fetch(),
+              icon: const Icon(Icons.refresh),
+            ),
+            IconButton(
+              tooltip: strings.settings,
+              onPressed: () => context.push(AppRoutes.kSettingsView),
+              icon: const Icon(Icons.tune),
+            ),
+          ],
         ),
         children: [
           FlatCard(
@@ -62,7 +76,7 @@ class PrayerView extends StatelessWidget {
                       ),
                       SizedBox(height: 18.h),
                       Text(
-                        loadedSchedule?.nextPrayerLabel ?? strings.nextPrayer,
+                        localizedNextPrayer,
                         style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),
@@ -113,7 +127,7 @@ class PrayerView extends StatelessWidget {
                             prayer.name == loadedSchedule.nextPrayerLabel;
                         return ListTile(
                           title: Text(
-                            prayer.name,
+                            localizePrayerName(strings, prayer.name),
                             style: TextStyle(
                               fontWeight: isUpcoming
                                   ? FontWeight.w700

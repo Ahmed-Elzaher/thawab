@@ -37,7 +37,7 @@ class AzkarView extends StatelessWidget {
           final loadedSession =
               sessionState is ZikrSessionSuccess &&
                   sessionState.items.isNotEmpty
-              ? sessionState.items.first
+              ? sessionState.items[sessionState.activeIndex]
               : session;
           return AppScreen(
             title: strings.azkarTitle,
@@ -162,11 +162,28 @@ class AzkarView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    TextButton.icon(
-                      onPressed: () =>
-                          context.read<ZikrSessionCubit>().resetCount(),
-                      icon: const Icon(Icons.refresh),
-                      label: Text(strings.resetCounter),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 8.w,
+                      children: [
+                        TextButton.icon(
+                          onPressed: () =>
+                              context.read<ZikrSessionCubit>().resetCount(),
+                          icon: const Icon(Icons.refresh),
+                          label: Text(strings.resetCounter),
+                        ),
+                        TextButton.icon(
+                          onPressed:
+                              sessionState is ZikrSessionSuccess &&
+                                  sessionState.items.length > 1
+                              ? () => context
+                                    .read<ZikrSessionCubit>()
+                                    .nextSession()
+                              : null,
+                          icon: const Icon(Icons.skip_next),
+                          label: Text(strings.nextZikr),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -206,7 +223,10 @@ class AzkarView extends StatelessWidget {
                     return Card(
                       child: InkWell(
                         borderRadius: BorderRadius.circular(16.r),
-                        onTap: () => _openCategories(context, loadedCategories),
+                        onTap: () => context.push(
+                          AppRoutes.kAzkarCategoriesView,
+                          extra: category,
+                        ),
                         child: Padding(
                           padding: EdgeInsets.all(14.r),
                           child: Column(

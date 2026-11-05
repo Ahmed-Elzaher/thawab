@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:thawab/l10n/generated/app_localizations.dart';
@@ -33,14 +34,34 @@ class HomeReadingProgressCard extends StatelessWidget {
     }
 
     final dashboard = summary!;
+    final readingResume = dashboard.readingResume;
+    final readingProgress = dashboard.readingProgress;
+    if (readingResume == null || readingProgress == null) {
+      return FlatCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(strings.readingProgressUnavailable),
+            SizedBox(height: 8.h),
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: TextButton(
+                onPressed: () => _openReader(context),
+                child: Text(strings.continueReading),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
     return FlatCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(dashboard.readingResume),
+          Text(readingResume),
           SizedBox(height: 12.h),
           LinearProgressIndicator(
-            value: dashboard.readingProgress.clamp(0, 1),
+            value: readingProgress.clamp(0, 1).toDouble(),
             minHeight: 5.h,
             backgroundColor: Theme.of(context)
                 .colorScheme
@@ -53,9 +74,10 @@ class HomeReadingProgressCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('${(dashboard.readingProgress * 100).round()}%'),
+              Text('${(readingProgress * 100).round()}%'),
               TextButton(
-                onPressed: () => context.push(AppRoutes.kQuranReaderView),
+                onPressed: () =>
+                    _openReader(context, dashboard.readingPageNumber),
                 child: Text(strings.continueReading),
               ),
             ],
@@ -63,5 +85,10 @@ class HomeReadingProgressCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _openReader(BuildContext context, [int? pageNumber]) async {
+    await context.push(AppRoutes.kQuranReaderView, extra: pageNumber);
+    if (context.mounted) context.read<HomeCubit>().fetch();
   }
 }

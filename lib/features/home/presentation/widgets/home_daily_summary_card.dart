@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:thawab/l10n/generated/app_localizations.dart';
 import 'package:thawab/core/widgets/app_screen.dart';
+import 'package:thawab/core/functions/localize_prayer_name.dart';
 import 'package:thawab/features/home/domain/entities/home_dashboard_entity.dart';
 import 'package:thawab/features/home/presentation/manager/home_cubit/home_cubit.dart';
 
@@ -62,7 +63,7 @@ class HomeDailySummaryCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  dashboard.nextPrayer,
+                  localizePrayerName(strings, dashboard.nextPrayer),
                   textAlign: TextAlign.start,
                   style: Theme.of(context).textTheme.headlineMedium
                       ?.copyWith(fontWeight: FontWeight.w700),

@@ -1,4 +1,5 @@
 import 'package:thawab/features/quran/domain/entities/quran_page_entity.dart';
+import 'package:thawab/features/quran/data/models/quran_verse_model.dart';
 
 class QuranPageModel extends QuranPageEntity {
   const QuranPageModel({
@@ -10,13 +11,23 @@ class QuranPageModel extends QuranPageEntity {
   factory QuranPageModel.fromJson(Map<String, dynamic> json) => QuranPageModel(
     surahName: json[QuranPageModelKey.surahName] as String,
     pageNumber: (json[QuranPageModelKey.pageNumber] as num).toInt(),
-    verses: List<String>.from(json[QuranPageModelKey.verses] as List<dynamic>),
+    verses: (json[QuranPageModelKey.verses] as List<dynamic>)
+        .map((item) => QuranVerseModel.fromJson(item as Map<String, dynamic>))
+        .toList(growable: false),
   );
 
   Map<String, dynamic> toJson() => {
     QuranPageModelKey.surahName: surahName,
     QuranPageModelKey.pageNumber: pageNumber,
-    QuranPageModelKey.verses: verses,
+    QuranPageModelKey.verses: verses
+        .map(
+          (verse) => QuranVerseModel(
+            surahNumber: verse.surahNumber,
+            verseNumber: verse.verseNumber,
+            text: verse.text,
+          ).toJson(),
+        )
+        .toList(growable: false),
   };
 }
 
