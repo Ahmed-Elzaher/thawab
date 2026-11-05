@@ -1,35 +1,65 @@
 import 'package:get_it/get_it.dart';
-import 'package:thawab/features/azkar/data/repositories/azkar_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:thawab/core/services/app_preferences_controller.dart';
+import 'package:thawab/features/azkar/data/data_sources/azkar_data_source.dart';
+import 'package:thawab/features/azkar/data/repositories/azkar_repository_impl.dart';
 import 'package:thawab/features/azkar/presentation/manager/azkar_categories_cubit/azkar_categories_cubit.dart';
 import 'package:thawab/features/azkar/presentation/manager/zikr_session_cubit/zikr_session_cubit.dart';
-import 'package:thawab/features/home/data/repositories/home_repository.dart';
+import 'package:thawab/features/azkar/domain/repositories/azkar_repository.dart';
+import 'package:thawab/features/home/data/data_sources/home_data_source.dart';
+import 'package:thawab/features/home/data/repositories/home_repository_impl.dart';
 import 'package:thawab/features/home/presentation/manager/home_cubit/home_cubit.dart';
-import 'package:thawab/features/prayer/data/repositories/prayer_repository.dart';
+import 'package:thawab/features/home/domain/repositories/home_repository.dart';
+import 'package:thawab/features/prayer/data/data_sources/prayer_data_source.dart';
+import 'package:thawab/features/prayer/data/repositories/prayer_repository_impl.dart';
 import 'package:thawab/features/prayer/presentation/manager/prayer_cubit/prayer_cubit.dart';
-import 'package:thawab/features/quran/data/repositories/quran_repository.dart';
+import 'package:thawab/features/prayer/domain/repositories/prayer_repository.dart';
+import 'package:thawab/features/quran/data/data_sources/quran_data_source.dart';
+import 'package:thawab/features/quran/data/repositories/quran_repository_impl.dart';
 import 'package:thawab/features/quran/presentation/manager/quran_page_cubit/quran_page_cubit.dart';
 import 'package:thawab/features/quran/presentation/manager/surah_cubit/surah_cubit.dart';
-import 'package:thawab/features/settings/data/repositories/settings_repository.dart';
+import 'package:thawab/features/quran/domain/repositories/quran_repository.dart';
+import 'package:thawab/features/settings/data/data_sources/settings_data_source.dart';
+import 'package:thawab/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:thawab/features/settings/presentation/manager/settings_cubit/settings_cubit.dart';
+import 'package:thawab/features/settings/domain/repositories/settings_repository.dart';
 
 final getIt = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
+  final preferences = await SharedPreferences.getInstance();
+  final appPreferences = AppPreferencesController(preferences);
+  await appPreferences.load();
+  getIt.registerSingleton<AppPreferencesController>(appPreferences);
+
   //! ========= Features - Content ==========
-  getIt.registerLazySingleton<HomeRepository>(() => EmptyHomeRepository());
-  getIt.registerLazySingleton<QuranPageRepository>(
-    () => EmptyQuranPageRepository(),
+  getIt.registerLazySingleton<HomeDataSource>(() => EmptyHomeDataSource());
+  getIt.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(dataSource: getIt()),
   );
-  getIt.registerLazySingleton<SurahRepository>(() => EmptySurahRepository());
-  getIt.registerLazySingleton<PrayerRepository>(() => EmptyPrayerRepository());
+  getIt.registerLazySingleton<QuranDataSource>(() => LocalQuranDataSource());
+  getIt.registerLazySingleton<QuranPageRepository>(
+    () => QuranPageRepositoryImpl(dataSource: getIt()),
+  );
+  getIt.registerLazySingleton<SurahRepository>(
+    () => SurahRepositoryImpl(dataSource: getIt()),
+  );
+  getIt.registerLazySingleton<PrayerDataSource>(() => EmptyPrayerDataSource());
+  getIt.registerLazySingleton<PrayerRepository>(
+    () => PrayerRepositoryImpl(dataSource: getIt()),
+  );
+  getIt.registerLazySingleton<AzkarDataSource>(() => LocalAzkarDataSource());
   getIt.registerLazySingleton<AzkarCategoryRepository>(
-    () => EmptyAzkarCategoryRepository(),
+    () => AzkarCategoryRepositoryImpl(dataSource: getIt()),
   );
   getIt.registerLazySingleton<ZikrSessionRepository>(
-    () => EmptyZikrSessionRepository(),
+    () => ZikrSessionRepositoryImpl(dataSource: getIt()),
+  );
+  getIt.registerLazySingleton<SettingsDataSource>(
+    () => EmptySettingsDataSource(),
   );
   getIt.registerLazySingleton<SettingsRepository>(
-    () => EmptySettingsRepository(),
+    () => SettingsRepositoryImpl(dataSource: getIt()),
   );
 
   getIt.registerFactory<HomeCubit>(() => HomeCubit(repository: getIt()));

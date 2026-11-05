@@ -1,9 +1,11 @@
-class SurahModel {
+import 'package:thawab/features/quran/domain/entities/surah_entity.dart';
+
+class SurahModel extends SurahEntity {
   const SurahModel({
-    required this.number,
-    required this.name,
-    required this.revelationType,
-    required this.verseCount,
+    required super.number,
+    required super.name,
+    required super.revelationType,
+    required super.verseCount,
   });
 
   factory SurahModel.fromJson(Map<String, dynamic> json) => SurahModel(
@@ -12,11 +14,6 @@ class SurahModel {
     revelationType: json[SurahModelKey.revelationType] as String,
     verseCount: (json[SurahModelKey.verseCount] as num).toInt(),
   );
-
-  final int number;
-  final String name;
-  final String revelationType;
-  final int verseCount;
 
   Map<String, dynamic> toJson() => {
     SurahModelKey.number: number,

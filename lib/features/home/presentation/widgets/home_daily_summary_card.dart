@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:thawab/l10n/generated/app_localizations.dart';
 import 'package:thawab/core/widgets/app_screen.dart';
-import 'package:thawab/features/home/data/models/home_dashboard_model.dart';
+import 'package:thawab/features/home/domain/entities/home_dashboard_entity.dart';
 import 'package:thawab/features/home/presentation/manager/home_cubit/home_cubit.dart';
 
 class HomeDailySummaryCard extends StatelessWidget {
@@ -10,11 +12,12 @@ class HomeDailySummaryCard extends StatelessWidget {
     required this.state,
   });
 
-  final HomeDashboardModel? summary;
+  final HomeDashboardEntity? summary;
   final HomeState state;
 
   @override
   Widget build(BuildContext context) {
+    final strings = S.of(context);
     if (summary == null) {
       return FlatCard(
         child: ContentStateMessage(
@@ -22,14 +25,14 @@ class HomeDailySummaryCard extends StatelessWidget {
           errorMessage: state is HomeFailure
               ? (state as HomeFailure).message
               : null,
-          emptyMessage: 'ستظهر بيانات اليوم بعد تحميلها.',
+          emptyMessage: strings.homeDailyUnavailable,
         ),
       );
     }
 
     final dashboard = summary!;
     return FlatCard(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -39,28 +42,28 @@ class HomeDailySummaryCard extends StatelessWidget {
                 Icons.access_time,
                 color: Theme.of(context).colorScheme.secondary,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8.w),
               Expanded(
                 child: Text(
-                  'الصلاة القادمة',
+                  strings.homePrayerLabel,
                   style: Theme.of(context).textTheme.labelLarge,
                 ),
               ),
               Icon(
                 Icons.circle,
-                size: 10,
+                size: 10.sp,
                 color: Theme.of(context).colorScheme.secondary,
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Text(
                   dashboard.nextPrayer,
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.start,
                   style: Theme.of(context).textTheme.headlineMedium
                       ?.copyWith(fontWeight: FontWeight.w700),
                 ),
@@ -73,14 +76,14 @@ class HomeDailySummaryCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6.h),
           Text(
             dashboard.hijriDate,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14.h),
           Row(
             children: [
               Expanded(
@@ -89,7 +92,7 @@ class HomeDailySummaryCard extends StatelessWidget {
                   thickness: 2,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8.w),
               Text(
                 dashboard.remainingTime,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(

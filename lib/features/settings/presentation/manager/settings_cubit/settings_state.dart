@@ -17,7 +17,7 @@ final class SettingsLoading extends SettingsState {
 final class SettingsSuccess extends SettingsState {
   const SettingsSuccess({required this.items});
 
-  final List<SettingsModel> items;
+  final List<SettingsEntity> items;
 
   @override
   List<Object?> get props => [items];

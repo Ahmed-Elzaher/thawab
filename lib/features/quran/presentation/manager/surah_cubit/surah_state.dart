@@ -17,7 +17,7 @@ final class SurahLoading extends SurahState {
 final class SurahSuccess extends SurahState {
   const SurahSuccess({required this.items});
 
-  final List<SurahModel> items;
+  final List<SurahEntity> items;
 
   @override
   List<Object?> get props => [items];

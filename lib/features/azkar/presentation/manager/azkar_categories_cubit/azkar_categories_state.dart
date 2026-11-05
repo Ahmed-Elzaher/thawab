@@ -17,7 +17,7 @@ final class AzkarCategoryLoading extends AzkarCategoryState {
 final class AzkarCategorySuccess extends AzkarCategoryState {
   const AzkarCategorySuccess({required this.items});
 
-  final List<AzkarCategoryModel> items;
+  final List<AzkarCategoryEntity> items;
 
   @override
   List<Object?> get props => [items];

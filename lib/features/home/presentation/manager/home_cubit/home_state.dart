@@ -17,7 +17,7 @@ final class HomeLoading extends HomeState {
 final class HomeSuccess extends HomeState {
   const HomeSuccess({required this.items});
 
-  final List<HomeDashboardModel> items;
+  final List<HomeDashboardEntity> items;
 
   @override
   List<Object?> get props => [items];

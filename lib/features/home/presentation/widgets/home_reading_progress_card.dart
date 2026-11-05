@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:thawab/l10n/generated/app_localizations.dart';
 import 'package:thawab/core/routing/app_routes.dart';
 import 'package:thawab/core/widgets/app_screen.dart';
-import 'package:thawab/features/home/data/models/home_dashboard_model.dart';
+import 'package:thawab/features/home/domain/entities/home_dashboard_entity.dart';
 import 'package:thawab/features/home/presentation/manager/home_cubit/home_cubit.dart';
 
 class HomeReadingProgressCard extends StatelessWidget {
@@ -12,11 +14,12 @@ class HomeReadingProgressCard extends StatelessWidget {
     required this.state,
   });
 
-  final HomeDashboardModel? summary;
+  final HomeDashboardEntity? summary;
   final HomeState state;
 
   @override
   Widget build(BuildContext context) {
+    final strings = S.of(context);
     if (summary == null) {
       return FlatCard(
         child: ContentStateMessage(
@@ -24,7 +27,7 @@ class HomeReadingProgressCard extends StatelessWidget {
           errorMessage: state is HomeFailure
               ? (state as HomeFailure).message
               : null,
-          emptyMessage: 'سيظهر تقدم القراءة بعد تحميله.',
+          emptyMessage: strings.readingProgressUnavailable,
         ),
       );
     }
@@ -35,10 +38,10 @@ class HomeReadingProgressCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(dashboard.readingResume),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           LinearProgressIndicator(
             value: dashboard.readingProgress.clamp(0, 1),
-            minHeight: 5,
+            minHeight: 5.h,
             backgroundColor: Theme.of(context)
                 .colorScheme
                 .surfaceContainerHighest,
@@ -46,14 +49,14 @@ class HomeReadingProgressCard extends StatelessWidget {
               Theme.of(context).colorScheme.secondary,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('${(dashboard.readingProgress * 100).round()}%'),
               TextButton(
                 onPressed: () => context.push(AppRoutes.kQuranReaderView),
-                child: const Text('أكمل القراءة'),
+                child: Text(strings.continueReading),
               ),
             ],
           ),

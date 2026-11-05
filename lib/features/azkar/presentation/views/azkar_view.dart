@@ -1,24 +1,32 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:thawab/l10n/generated/app_localizations.dart';
 import 'package:thawab/core/routing/app_routes.dart';
-import 'package:thawab/features/azkar/data/models/azkar_category_model.dart';
-import 'package:thawab/features/azkar/data/models/zikr_session_model.dart';
+import 'package:thawab/features/azkar/domain/entities/azkar_category_entity.dart';
+import 'package:thawab/features/azkar/domain/entities/zikr_session_entity.dart';
 import 'package:thawab/features/azkar/presentation/manager/azkar_categories_cubit/azkar_categories_cubit.dart';
 import 'package:thawab/features/azkar/presentation/manager/zikr_session_cubit/zikr_session_cubit.dart';
+import 'package:thawab/features/azkar/presentation/widgets/azkar_tab.dart';
+import 'package:thawab/core/utils/app_navigation_index.dart';
+import 'package:thawab/core/utils/app_spacing.dart';
 import 'package:thawab/core/widgets/app_screen.dart';
 
 class AzkarView extends StatelessWidget {
   const AzkarView({super.key, this.session, this.categories = const []});
 
-  final ZikrSessionModel? session;
-  final List<AzkarCategoryModel> categories;
+  final ZikrSessionEntity? session;
+  final List<AzkarCategoryEntity> categories;
 
   @override
   Widget build(
     BuildContext context,
   ) => BlocBuilder<AzkarCategoriesCubit, AzkarCategoryState>(
     builder: (context, categoryState) {
+      final strings = S.of(context);
       final loadedCategories =
           categoryState is AzkarCategorySuccess &&
               categoryState.items.isNotEmpty
@@ -32,35 +40,37 @@ class AzkarView extends StatelessWidget {
               ? sessionState.items.first
               : session;
           return AppScreen(
-            title: 'الأذكار والمسبحة',
-            bottomNavigationBar: const AppBottomBar(index: 3),
+            title: strings.azkarTitle,
+            bottomNavigationBar: const AppBottomBar(
+              index: AppNavigationIndex.azkar,
+            ),
             action: IconButton(
-              tooltip: 'أقسام الأذكار',
+              tooltip: strings.azkarCategories,
               onPressed: () => _openCategories(context, loadedCategories),
               icon: const Icon(Icons.grid_view),
             ),
             children: [
-              SegmentedButton<String>(
-                segments: const [
+              SegmentedButton<AzkarTab>(
+                segments: [
                   ButtonSegment(
-                    value: 'counter',
+                    value: AzkarTab.tasbeeh,
                     icon: Icon(Icons.touch_app_outlined),
-                    label: Text('المسبحة الإلكترونية'),
+                    label: Text(strings.electronicTasbeeh),
                   ),
                   ButtonSegment(
-                    value: 'categories',
+                    value: AzkarTab.categories,
                     icon: Icon(Icons.menu_book_outlined),
-                    label: Text('أقسام الأذكار'),
+                    label: Text(strings.azkarCategories),
                   ),
                 ],
-                selected: const {'counter'},
+                selected: const {AzkarTab.tasbeeh},
                 onSelectionChanged: (selection) {
-                  if (selection.contains('categories')) {
+                  if (selection.contains(AzkarTab.categories)) {
                     _openCategories(context, loadedCategories);
                   }
                 },
               ),
-              const SectionTitle('مسبحتك'),
+              SectionTitle(strings.yourTasbeeh),
               FlatCard(
                 child: Column(
                   children: [
@@ -72,21 +82,21 @@ class AzkarView extends StatelessWidget {
                         errorMessage: sessionState is ZikrSessionFailure
                             ? sessionState.message
                             : null,
-                        emptyMessage: 'حمّل ذِكرًا للبدء',
+                        emptyMessage: strings.loadZikrToStart,
                       )
                     else
                       Text(
                         loadedSession.text,
-                        style: const TextStyle(
-                          fontSize: 21,
+                        style: TextStyle(
+                          fontSize: 21.sp,
                           fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     SizedBox(
-                      width: 176,
-                      height: 176,
+                      width: math.min(176.w, AppSpacing.featureArtworkMaxSize),
+                      height: math.min(176.w, AppSpacing.featureArtworkMaxSize),
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
@@ -101,7 +111,7 @@ class AzkarView extends StatelessWidget {
                                           loadedSession.target)
                                       .clamp(0, 1)
                                       .toDouble(),
-                            strokeWidth: 5,
+                            strokeWidth: 5.r,
                             color: Theme.of(context).colorScheme.secondary,
                             backgroundColor: Theme.of(context)
                                 .colorScheme
@@ -109,7 +119,7 @@ class AzkarView extends StatelessWidget {
                           ),
                           Positioned.fill(
                             child: Padding(
-                              padding: const EdgeInsets.all(5),
+                              padding: EdgeInsets.all(5.r),
                               child: OutlinedButton(
                                 style: OutlinedButton.styleFrom(
                                   shape: const CircleBorder(),
@@ -136,8 +146,10 @@ class AzkarView extends StatelessWidget {
                                     ),
                                     Text(
                                       loadedSession == null
-                                          ? 'العداد'
-                                          : 'من أصل ${loadedSession.target}',
+                                          ? strings.counter
+                                          : strings.countOf(
+                                              loadedSession.target,
+                                            ),
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelMedium,
@@ -154,16 +166,16 @@ class AzkarView extends StatelessWidget {
                       onPressed: () =>
                           context.read<ZikrSessionCubit>().resetCount(),
                       icon: const Icon(Icons.refresh),
-                      label: const Text('إعادة العداد'),
+                      label: Text(strings.resetCounter),
                     ),
                   ],
                 ),
               ),
               SectionTitle(
-                'أقسام الأذكار',
+                strings.azkarCategories,
                 trailing: TextButton(
                   onPressed: () => _openCategories(context, loadedCategories),
-                  child: const Text('عرض الكل'),
+                  child: Text(strings.viewAll),
                 ),
               ),
               if (loadedCategories.isEmpty)
@@ -175,7 +187,7 @@ class AzkarView extends StatelessWidget {
                     errorMessage: categoryState is AzkarCategoryFailure
                         ? categoryState.message
                         : null,
-                    emptyMessage: 'ستظهر أقسام الأذكار بعد تحميلها.',
+                    emptyMessage: strings.azkarUnavailable,
                   ),
                 )
               else
@@ -183,20 +195,20 @@ class AzkarView extends StatelessWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: loadedCategories.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: _gridColumnCount(context),
+                    mainAxisSpacing: 12.h,
+                    crossAxisSpacing: 12.w,
                     childAspectRatio: 1.35,
                   ),
                   itemBuilder: (context, index) {
                     final category = loadedCategories[index];
                     return Card(
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                         onTap: () => _openCategories(context, loadedCategories),
                         child: Padding(
-                          padding: const EdgeInsets.all(14),
+                          padding: EdgeInsets.all(14.r),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -211,7 +223,7 @@ class AzkarView extends StatelessWidget {
                                     ?.copyWith(fontWeight: FontWeight.w700),
                               ),
                               Text(
-                                category.description,
+                                strings.azkarEntryCount(category.entryCount),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.bodySmall,
@@ -232,6 +244,13 @@ class AzkarView extends StatelessWidget {
 
   static void _openCategories(
     BuildContext context,
-    List<AzkarCategoryModel> loadedCategories,
+    List<AzkarCategoryEntity> loadedCategories,
   ) => context.push(AppRoutes.kAzkarCategoriesView, extra: loadedCategories);
+
+  int _gridColumnCount(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    if (width >= AppSpacing.expandedBreakpoint) return 4;
+    if (width >= AppSpacing.tabletBreakpoint) return 3;
+    return 2;
+  }
 }

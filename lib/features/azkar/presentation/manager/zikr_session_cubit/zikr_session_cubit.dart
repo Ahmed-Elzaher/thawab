@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thawab/features/azkar/data/models/zikr_session_model.dart';
-import 'package:thawab/features/azkar/data/repositories/azkar_repository.dart';
+import 'package:thawab/features/azkar/domain/entities/zikr_session_entity.dart';
+import 'package:thawab/features/azkar/domain/repositories/azkar_repository.dart';
 
 part 'zikr_session_state.dart';
 
@@ -28,7 +28,7 @@ class ZikrSessionCubit extends Cubit<ZikrSessionState> {
     emit(ZikrSessionLoading());
     final result = await repository.fetch();
     result.fold(
-      (failure) => emit(ZikrSessionFailure(message: failure.message)),
+      (failure) => emit(ZikrSessionFailure(message: failure.code)),
       (items) => emit(ZikrSessionSuccess(items: items)),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashBrand extends StatelessWidget {
   const SplashBrand({required this.name, required this.tagline, super.key});
@@ -16,19 +17,19 @@ class SplashBrand extends StatelessWidget {
           name,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 30.sp,
             height: 36 / 30,
             letterSpacing: -.75,
             color: colors.onSurface,
             fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         Text(
           tagline,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 12.sp,
             height: 16 / 12,
             letterSpacing: .3,
             color: colors.onSurfaceVariant,

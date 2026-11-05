@@ -1,14 +1,13 @@
-class ZikrSessionModel {
-  const ZikrSessionModel({required this.text, required this.target});
+import 'package:thawab/features/azkar/domain/entities/zikr_session_entity.dart';
+
+class ZikrSessionModel extends ZikrSessionEntity {
+  const ZikrSessionModel({required super.text, required super.target});
 
   factory ZikrSessionModel.fromJson(Map<String, dynamic> json) =>
       ZikrSessionModel(
         text: json[ZikrSessionModelKey.text] as String,
         target: (json[ZikrSessionModelKey.target] as num).toInt(),
       );
-
-  final String text;
-  final int target;
 
   Map<String, dynamic> toJson() => {
     ZikrSessionModelKey.text: text,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:thawab/l10n/generated/app_localizations.dart';
 import 'package:thawab/core/routing/app_routes.dart';
-import 'package:thawab/core/utils/app_constants.dart';
 import 'package:thawab/features/splash/presentation/widgets/splash_corner_frame.dart';
 import 'package:thawab/features/splash/presentation/widgets/splash_brand.dart';
 import 'package:thawab/features/splash/presentation/widgets/splash_footer.dart';
@@ -31,6 +32,7 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final strings = S.of(context);
 
     return Scaffold(
       body: LayoutBuilder(
@@ -54,16 +56,16 @@ class _SplashViewState extends State<SplashView> {
                   ),
                   Positioned(
                     top: height * .245,
-                    left: (width - _logoSize) / 2,
-                    child: const SplashLogo(size: _logoSize),
+                    left: (width - _logoSize.w) / 2,
+                    child: SplashLogo(size: _logoSize.w),
                   ),
                   Positioned(
                     top: height * .415,
-                    left: 24,
-                    right: 24,
+                    left: 24.w,
+                    right: 24.w,
                     child: SplashBrand(
-                      name: AppConstants.appNameArabic,
-                      tagline: AppConstants.appTagline,
+                      name: strings.appName,
+                      tagline: strings.appTagline,
                     ),
                   ),
                   Positioned(
@@ -73,13 +75,13 @@ class _SplashViewState extends State<SplashView> {
                     child: const SplashOrnamentalDivider(),
                   ),
                   Positioned(
-                    left: 40,
-                    right: 40,
-                    bottom: 60,
+                    left: 40.w,
+                    right: 40.w,
+                    bottom: 60.h,
                     child: SplashFooter(
-                      loadingMessage: AppConstants.splashLoadingMessage,
-                      verse: AppConstants.splashVerse,
-                      version: AppConstants.appVersion,
+                      loadingMessage: strings.splashLoading,
+                      verse: strings.splashVerse,
+                      version: strings.appVersion,
                     ),
                   ),
                 ],

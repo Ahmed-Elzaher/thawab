@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashFooter extends StatelessWidget {
   const SplashFooter({
@@ -20,50 +21,55 @@ class SplashFooter extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          width: 192,
+          width: 192.w,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(999.r),
             child: LinearProgressIndicator(
               value: null,
-              minHeight: 3,
+              minHeight: 3.h,
               backgroundColor: colors.outline,
               valueColor: AlwaysStoppedAnimation<Color>(colors.secondary),
             ),
           ),
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14.h),
         Text(
           loadingMessage,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 12.sp,
             height: 16 / 12,
             color: colors.onSurfaceVariant,
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 31),
-        Divider(color: colors.outline, height: 1),
-        const SizedBox(height: 17),
+        SizedBox(height: 31.h),
+        Divider(color: colors.outline, height: 1.h),
+        SizedBox(height: 17.h),
         Row(
           textDirection: TextDirection.ltr,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               version,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 10.sp,
                 height: 1.5,
                 color: colors.onSurfaceVariant,
               ),
             ),
-            Text(
-              verse,
-              textDirection: TextDirection.rtl,
-              style: TextStyle(
-                fontSize: 12,
-                height: 1.5,
-                color: colors.onSurface,
+            SizedBox(width: 8.w),
+            Expanded(
+              child: Text(
+                verse,
+                textAlign: TextAlign.end,
+                textDirection: TextDirection.rtl,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  height: 1.5,
+                  color: colors.onSurface,
+                ),
               ),
             ),
           ],

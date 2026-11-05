@@ -1,0 +1,6 @@
+Tanzil Quran Metadata
+Copyright (C) 2008-2009 Tanzil.info
+License: Creative Commons Attribution (CC BY)
+
+Source: https://tanzil.net/docs/Quran_Metadata
+License information: https://creativecommons.org/licenses/by/3.0/

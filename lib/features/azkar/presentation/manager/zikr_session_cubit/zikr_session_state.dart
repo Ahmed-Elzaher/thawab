@@ -17,7 +17,7 @@ final class ZikrSessionLoading extends ZikrSessionState {
 final class ZikrSessionSuccess extends ZikrSessionState {
   const ZikrSessionSuccess({required this.items, this.count = 0});
 
-  final List<ZikrSessionModel> items;
+  final List<ZikrSessionEntity> items;
   final int count;
 
   ZikrSessionSuccess copyWith({int? count}) =>

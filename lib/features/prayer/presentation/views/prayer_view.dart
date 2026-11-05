@@ -1,29 +1,37 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:thawab/l10n/generated/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:thawab/core/routing/app_routes.dart';
-import 'package:thawab/core/utils/app_colors.dart';
+import 'package:thawab/core/utils/app_navigation_index.dart';
+import 'package:thawab/core/utils/app_spacing.dart';
 import 'package:thawab/features/prayer/presentation/manager/prayer_cubit/prayer_cubit.dart';
-import 'package:thawab/features/prayer/data/models/prayer_schedule_model.dart';
+import 'package:thawab/features/prayer/domain/entities/prayer_schedule_entity.dart';
 import 'package:thawab/core/widgets/app_screen.dart';
 
 class PrayerView extends StatelessWidget {
   const PrayerView({super.key, this.schedule});
 
-  final PrayerScheduleModel? schedule;
+  final PrayerScheduleEntity? schedule;
 
   @override
   Widget build(BuildContext context) => BlocBuilder<PrayerCubit, PrayerState>(
     builder: (context, state) {
+      final strings = S.of(context);
       final loadedSchedule = state is PrayerSuccess && state.items.isNotEmpty
           ? state.items.first
           : schedule;
       return AppScreen(
-        title: 'مواقيت الصلاة',
-        bottomNavigationBar: const AppBottomBar(index: 1),
-        backgroundColor: AppColors.prayerBackground,
+        title: strings.prayerTitle,
+        bottomNavigationBar: const AppBottomBar(
+          index: AppNavigationIndex.prayer,
+        ),
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
         action: IconButton(
-          tooltip: 'الإعدادات',
+          tooltip: strings.settings,
           onPressed: () => context.push(AppRoutes.kSettingsView),
           icon: const Icon(Icons.tune),
         ),
@@ -41,26 +49,27 @@ class PrayerView extends StatelessWidget {
                             Icons.location_on_outlined,
                             color: Theme.of(context).colorScheme.secondary,
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8.w),
                           Expanded(
                             child: Text(
-                              loadedSchedule?.location ?? 'الموقع غير متاح',
+                              loadedSchedule?.location ??
+                                  strings.locationUnavailable,
                               style: Theme.of(context).textTheme.titleSmall
                                   ?.copyWith(fontWeight: FontWeight.w700),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 18),
+                      SizedBox(height: 18.h),
                       Text(
-                        loadedSchedule?.nextPrayerLabel ?? 'الصلاة القادمة',
+                        loadedSchedule?.nextPrayerLabel ?? strings.nextPrayer,
                         style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       Text(
                         loadedSchedule?.countdown ??
-                            'ستظهر المدة بعد تحميل المواقيت.',
+                            strings.prayerDurationUnavailable,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -68,22 +77,22 @@ class PrayerView extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12.w),
                 Icon(
                   Icons.access_time,
-                  size: 42,
+                  size: 42.sp,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
               ],
             ),
           ),
-          const SectionTitle('مواقيت اليوم'),
+          SectionTitle(strings.todayPrayers),
           if (loadedSchedule == null || loadedSchedule.prayers.isEmpty)
             FlatCard(
               child: ContentStateMessage(
                 isLoading: state is PrayerLoading || state is PrayerInitial,
                 errorMessage: state is PrayerFailure ? state.message : null,
-                emptyMessage: 'ستظهر مواقيت الصلاة بعد ربط مصدرها.',
+                emptyMessage: strings.prayerTimesUnavailable,
               ),
             )
           else
@@ -96,7 +105,7 @@ class PrayerView extends StatelessWidget {
                     index < loadedSchedule.prayers.length;
                     index++
                   ) ...[
-                    if (index > 0) const Divider(height: 1),
+                    if (index > 0) Divider(height: 1.h),
                     Builder(
                       builder: (context) {
                         final prayer = loadedSchedule.prayers[index];
@@ -137,22 +146,22 @@ class PrayerView extends StatelessWidget {
                 ],
               ),
             ),
-          const SectionTitle('اتجاه القبلة'),
+          SectionTitle(strings.qiblaDirection),
           FlatCard(
             child: Column(
               children: [
                 Align(
                   alignment: AlignmentDirectional.centerEnd,
                   child: Text(
-                    'اتجاه القبلة',
+                    strings.qiblaDirection,
                     style: Theme.of(context).textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.w700),
                   ),
                 ),
-                const SizedBox(height: 22),
+                SizedBox(height: 22.h),
                 SizedBox(
-                  width: 220,
-                  height: 220,
+                  width: math.min(220.w, AppSpacing.featureArtworkMaxSize),
+                  height: math.min(220.w, AppSpacing.featureArtworkMaxSize),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
@@ -165,8 +174,14 @@ class PrayerView extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        width: 140,
-                        height: 140,
+                        width: math.min(
+                          140.w,
+                          AppSpacing.featureArtworkMaxSize * .64,
+                        ),
+                        height: math.min(
+                          140.w,
+                          AppSpacing.featureArtworkMaxSize * .64,
+                        ),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -180,7 +195,7 @@ class PrayerView extends StatelessWidget {
                               Icons.explore_outlined,
                               color: Theme.of(context).colorScheme.secondary,
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8.h),
                             Text(
                               loadedSchedule?.qiblaDirection ?? '—',
                               textAlign: TextAlign.center,

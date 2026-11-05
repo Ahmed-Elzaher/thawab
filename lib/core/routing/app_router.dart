@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:thawab/l10n/generated/app_localizations.dart';
 import 'package:thawab/core/routing/app_routes.dart';
 import 'package:thawab/core/services/services_locator.dart';
-import 'package:thawab/features/azkar/data/models/azkar_category_model.dart';
+import 'package:thawab/features/azkar/domain/entities/azkar_category_entity.dart';
 import 'package:thawab/features/azkar/presentation/views/azkar_categories_view.dart';
 import 'package:thawab/features/azkar/presentation/manager/azkar_categories_cubit/azkar_categories_cubit.dart';
 import 'package:thawab/features/azkar/presentation/views/azkar_view.dart';
 import 'package:thawab/features/azkar/presentation/manager/zikr_session_cubit/zikr_session_cubit.dart';
 import 'package:thawab/features/home/presentation/views/home_view.dart';
-import 'package:thawab/features/quran/data/models/surah_model.dart';
+import 'package:thawab/features/quran/domain/entities/surah_entity.dart';
 import 'package:thawab/features/quran/presentation/views/quran_index_view.dart';
 import 'package:thawab/features/quran/presentation/views/quran_reader_view.dart';
 import 'package:thawab/features/quran/presentation/manager/quran_page_cubit/quran_page_cubit.dart';
@@ -34,8 +35,8 @@ abstract final class AppRouter {
           create: (_) => getIt<QuranPageCubit>()..fetch(),
           child: QuranReaderView(
             onOpenIndex: () => context.push(AppRoutes.kQuranIndexView),
-            surah: state.extra is SurahModel
-                ? state.extra! as SurahModel
+            surah: state.extra is SurahEntity
+                ? state.extra! as SurahEntity
                 : null,
           ),
         ),
@@ -62,8 +63,8 @@ abstract final class AppRouter {
         builder: (_, state) => BlocProvider(
           create: (_) => getIt<SurahCubit>()..fetch(),
           child: QuranIndexView(
-            surahs: state.extra is List<SurahModel>
-                ? state.extra! as List<SurahModel>
+            surahs: state.extra is List<SurahEntity>
+                ? state.extra! as List<SurahEntity>
                 : const [],
           ),
         ),
@@ -73,8 +74,8 @@ abstract final class AppRouter {
         builder: (_, state) => BlocProvider(
           create: (_) => getIt<AzkarCategoriesCubit>()..fetch(),
           child: AzkarCategoriesView(
-            categories: state.extra is List<AzkarCategoryModel>
-                ? state.extra! as List<AzkarCategoryModel>
+            categories: state.extra is List<AzkarCategoryEntity>
+                ? state.extra! as List<AzkarCategoryEntity>
                 : const [],
           ),
         ),
@@ -87,7 +88,7 @@ abstract final class AppRouter {
         ),
       ),
     ],
-    errorBuilder: (_, state) =>
-        Scaffold(body: Center(child: Text(state.error.toString()))),
+    errorBuilder: (context, state) =>
+        Scaffold(body: Center(child: Text(S.of(context).routeError))),
   );
 }

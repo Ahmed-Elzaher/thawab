@@ -1,16 +1,17 @@
 import 'package:equatable/equatable.dart';
+import 'package:thawab/core/errors/failure_code.dart';
 
 abstract class Failure extends Equatable {
-  const Failure({required this.message});
+  const Failure({required this.code});
 
-  final String message;
+  final String code;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [code];
 }
 
 class DataSourceUnavailableFailure extends Failure {
   const DataSourceUnavailableFailure({
-    super.message = 'مصدر البيانات غير مربوط بعد',
+    super.code = FailureCode.dataSourceUnavailable,
   });
 }

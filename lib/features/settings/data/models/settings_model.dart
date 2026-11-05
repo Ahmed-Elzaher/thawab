@@ -1,10 +1,12 @@
-class SettingsModel {
+import 'package:thawab/features/settings/domain/entities/settings_entity.dart';
+
+class SettingsModel extends SettingsEntity {
   const SettingsModel({
-    required this.appearance,
-    required this.quranFontSize,
-    required this.location,
-    required this.prayerCalculationMethod,
-    required this.notifications,
+    required super.appearance,
+    required super.quranFontSize,
+    required super.location,
+    required super.prayerCalculationMethod,
+    required super.notifications,
   });
 
   factory SettingsModel.fromJson(Map<String, dynamic> json) => SettingsModel(
@@ -15,12 +17,6 @@ class SettingsModel {
         json[SettingsModelKey.prayerCalculationMethod] as String,
     notifications: json[SettingsModelKey.notifications] as String,
   );
-
-  final String appearance;
-  final String quranFontSize;
-  final String location;
-  final String prayerCalculationMethod;
-  final String notifications;
 
   Map<String, dynamic> toJson() => {
     SettingsModelKey.appearance: appearance,

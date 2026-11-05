@@ -1,14 +1,13 @@
-class PrayerTimeModel {
-  const PrayerTimeModel({required this.name, required this.time});
+import 'package:thawab/features/prayer/domain/entities/prayer_time_entity.dart';
+
+class PrayerTimeModel extends PrayerTimeEntity {
+  const PrayerTimeModel({required super.name, required super.time});
 
   factory PrayerTimeModel.fromJson(Map<String, dynamic> json) =>
       PrayerTimeModel(
         name: json[PrayerTimeModelKey.name] as String,
         time: json[PrayerTimeModelKey.time] as String,
       );
-
-  final String name;
-  final String time;
 
   Map<String, dynamic> toJson() => {
     PrayerTimeModelKey.name: name,

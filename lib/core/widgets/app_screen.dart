@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:thawab/core/utils/app_spacing.dart';
 
 export 'package:thawab/core/widgets/app_bottom_bar.dart';
 export 'package:thawab/core/widgets/content_state_message.dart';
@@ -32,9 +34,22 @@ class AppScreen extends StatelessWidget {
       actions: action == null ? null : [action!],
     ),
     body: SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-        children: children,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: AppSpacing.contentMaxWidth,
+          ),
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.screenHorizontal.w,
+              AppSpacing.screenTop.h,
+              AppSpacing.screenHorizontal.w,
+              AppSpacing.screenBottom.h,
+            ),
+            children: children,
+          ),
+        ),
       ),
     ),
     bottomNavigationBar: bottomNavigationBar,

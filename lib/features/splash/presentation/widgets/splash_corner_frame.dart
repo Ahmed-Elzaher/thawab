@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashCornerFramePainter extends CustomPainter {
   const SplashCornerFramePainter({required this.color});
@@ -9,26 +10,18 @@ class SplashCornerFramePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color.withValues(alpha: .6)
-      ..strokeWidth = 1
+      ..strokeWidth = 1.r
       ..style = PaintingStyle.stroke;
-    const inset = 24.0;
-    const top = 32.0;
-    const corner = 64.0;
-    const bottom = 48.0;
+    final inset = 24.w;
+    final top = 32.h;
+    final corner = 64.r;
+    final bottom = 48.h;
     final right = size.width - inset;
     final lower = size.height - bottom;
 
     canvas
-      ..drawLine(
-        const Offset(inset, top + corner),
-        const Offset(inset, top),
-        paint,
-      )
-      ..drawLine(
-        const Offset(inset, top),
-        const Offset(inset + corner, top),
-        paint,
-      )
+      ..drawLine(Offset(inset, top + corner), Offset(inset, top), paint)
+      ..drawLine(Offset(inset, top), Offset(inset + corner, top), paint)
       ..drawLine(Offset(right - corner, top), Offset(right, top), paint)
       ..drawLine(Offset(right, top), Offset(right, top + corner), paint)
       ..drawLine(Offset(inset, lower - corner), Offset(inset, lower), paint)

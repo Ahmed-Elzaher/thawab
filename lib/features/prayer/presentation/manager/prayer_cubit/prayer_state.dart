@@ -17,7 +17,7 @@ final class PrayerLoading extends PrayerState {
 final class PrayerSuccess extends PrayerState {
   const PrayerSuccess({required this.items});
 
-  final List<PrayerScheduleModel> items;
+  final List<PrayerScheduleEntity> items;
 
   @override
   List<Object?> get props => [items];

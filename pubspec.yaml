@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -41,6 +43,8 @@ dependencies:
   internet_connection_checker_plus: ^3.1.2
   equatable: ^3.0.0
   go_router: ^18.1.3
+  shared_preferences: ^2.5.3
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +62,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -66,6 +71,12 @@ flutter:
 
   assets:
     - assets/images/thawab_app_icon.png
+    - assets/quran-uthmani.txt
+    - assets/quran-data.xml
+    - assets/tanzil-license.txt
+    - assets/tanzil-metadata-license.txt
+    - assets/hisn-al-muslim.json
+    - assets/hisn-al-muslim-license.md
 
   fonts:
     - family: IBMPlexSansArabic

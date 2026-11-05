@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thawab/core/utils/app_colors.dart';
-import 'package:thawab/features/quran/presentation/manager/quran_page_cubit/quran_page_cubit.dart';
-import 'package:thawab/features/quran/data/models/quran_page_model.dart';
-import 'package:thawab/features/quran/data/models/surah_model.dart';
+import 'package:thawab/core/utils/app_navigation_index.dart';
 import 'package:thawab/core/widgets/app_screen.dart';
+import 'package:thawab/features/quran/domain/entities/quran_page_entity.dart';
+import 'package:thawab/features/quran/domain/entities/surah_entity.dart';
+import 'package:thawab/features/quran/presentation/manager/quran_page_cubit/quran_page_cubit.dart';
+import 'package:thawab/l10n/generated/app_localizations.dart';
 
-class QuranReaderView extends StatelessWidget {
+class QuranReaderView extends StatefulWidget {
   const QuranReaderView({
     super.key,
     required this.onOpenIndex,
@@ -15,28 +17,52 @@ class QuranReaderView extends StatelessWidget {
   });
 
   final VoidCallback onOpenIndex;
-  final QuranPageModel? page;
-  final SurahModel? surah;
+  final QuranPageEntity? page;
+  final SurahEntity? surah;
+
+  @override
+  State<QuranReaderView> createState() => _QuranReaderViewState();
+}
+
+class _QuranReaderViewState extends State<QuranReaderView> {
+  int _pageIndex = 0;
+
+  @override
+  void didUpdateWidget(covariant QuranReaderView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.surah?.number != widget.surah?.number) {
+      _pageIndex = 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<QuranPageCubit, QuranPageState>(
         builder: (context, state) {
+          final strings = S.of(context);
           final pages = state is QuranPageSuccess
               ? state.items
-              : const <QuranPageModel>[];
-          final matchingPages = surah == null
+              : const <QuranPageEntity>[];
+          final matchingPages = widget.surah == null
               ? pages
-              : pages.where((item) => item.surahName == surah!.name);
+              : pages
+                    .where((item) => item.surahName == widget.surah!.name)
+                    .toList();
+          final selectedPageIndex = matchingPages.isEmpty
+              ? 0
+              : _pageIndex.clamp(0, matchingPages.length - 1).toInt();
           final loadedPage =
-              page ?? (matchingPages.isEmpty ? null : matchingPages.first);
+              widget.page ??
+              (matchingPages.isEmpty ? null : matchingPages[selectedPageIndex]);
+
           return AppScreen(
-            title: surah?.name ?? 'المصحف الشريف',
-            bottomNavigationBar: const AppBottomBar(index: 0),
-            backgroundColor: AppColors.prayerBackground,
+            title: widget.surah?.name ?? strings.quranReaderTitle,
+            bottomNavigationBar: const AppBottomBar(
+              index: AppNavigationIndex.quran,
+            ),
             action: IconButton(
-              tooltip: 'فهرس السور',
-              onPressed: onOpenIndex,
+              tooltip: strings.surahIndexTooltip,
+              onPressed: widget.onOpenIndex,
               icon: const Icon(Icons.format_list_bulleted),
             ),
             children: [
@@ -46,14 +72,16 @@ class QuranReaderView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(loadedPage?.surahName ?? surah?.name ?? '—'),
+                        Text(
+                          loadedPage?.surahName ?? widget.surah?.name ?? '—',
+                        ),
                         Text(loadedPage?.pageNumber.toString() ?? '—'),
                       ],
                     ),
-                    const Divider(height: 32),
+                    Divider(height: 32.h),
                     if (loadedPage == null || loadedPage.verses.isEmpty)
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 48),
+                        padding: EdgeInsets.symmetric(vertical: 48.h),
                         child: ContentStateMessage(
                           isLoading:
                               state is QuranPageLoading ||
@@ -61,28 +89,54 @@ class QuranReaderView extends StatelessWidget {
                           errorMessage: state is QuranPageFailure
                               ? state.message
                               : null,
-                          emptyMessage:
-                              'ستظهر الآيات هنا بعد تحميل بيانات المصحف.',
+                          emptyMessage: strings.versesUnavailable,
                         ),
                       )
                     else
                       Text(
                         loadedPage.verses.join(' ۞ '),
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 25, height: 2.1),
+                        style: TextStyle(fontSize: 25.sp, height: 2.1),
                       ),
                   ],
                 ),
               ),
-              const SectionTitle('أدوات القراءة'),
-              const FlatCard(
-                child: Text('تتوفر أدوات القراءة بعد تحميل بيانات الصفحة.'),
-              ),
-              const SizedBox(height: 16),
+              if (widget.page == null && matchingPages.length > 1)
+                FlatCard(
+                  padding: EdgeInsets.zero,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        tooltip: strings.previousPage,
+                        onPressed: selectedPageIndex == 0
+                            ? null
+                            : () => setState(() => _pageIndex--),
+                        icon: const Icon(Icons.chevron_right),
+                      ),
+                      Text(
+                        strings.quranPageIndicator(
+                          selectedPageIndex + 1,
+                          matchingPages.length,
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: strings.nextPage,
+                        onPressed: selectedPageIndex == matchingPages.length - 1
+                            ? null
+                            : () => setState(() => _pageIndex++),
+                        icon: const Icon(Icons.chevron_left),
+                      ),
+                    ],
+                  ),
+                ),
+              SectionTitle(strings.readingTools),
+              FlatCard(child: Text(strings.readingToolsUnavailable)),
+              SizedBox(height: 16.h),
               OutlinedButton.icon(
-                onPressed: onOpenIndex,
+                onPressed: widget.onOpenIndex,
                 icon: const Icon(Icons.menu_book),
-                label: const Text('تصفح فهرس السور'),
+                label: Text(strings.browseSurahs),
               ),
             ],
           );

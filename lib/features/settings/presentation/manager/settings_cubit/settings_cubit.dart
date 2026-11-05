@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thawab/features/settings/data/models/settings_model.dart';
-import 'package:thawab/features/settings/data/repositories/settings_repository.dart';
+import 'package:thawab/features/settings/domain/entities/settings_entity.dart';
+import 'package:thawab/features/settings/domain/repositories/settings_repository.dart';
 
 part 'settings_state.dart';
 
@@ -14,7 +14,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(SettingsLoading());
     final result = await repository.fetch();
     result.fold(
-      (failure) => emit(SettingsFailure(message: failure.message)),
+      (failure) => emit(SettingsFailure(message: failure.code)),
       (items) => emit(SettingsSuccess(items: items)),
     );
   }

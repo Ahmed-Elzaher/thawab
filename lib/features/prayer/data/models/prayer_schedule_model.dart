@@ -1,13 +1,14 @@
 import 'package:thawab/features/prayer/data/models/prayer_time_model.dart';
+import 'package:thawab/features/prayer/domain/entities/prayer_schedule_entity.dart';
 
-class PrayerScheduleModel {
+class PrayerScheduleModel extends PrayerScheduleEntity {
   const PrayerScheduleModel({
-    required this.location,
-    required this.nextPrayerLabel,
-    required this.countdown,
-    required this.prayers,
-    required this.qiblaDirection,
-  });
+    required super.location,
+    required super.nextPrayerLabel,
+    required super.countdown,
+    required List<PrayerTimeModel> prayers,
+    required super.qiblaDirection,
+  }) : super(prayers: prayers);
 
   factory PrayerScheduleModel.fromJson(Map<String, dynamic> json) =>
       PrayerScheduleModel(
@@ -22,18 +23,12 @@ class PrayerScheduleModel {
         qiblaDirection: json[PrayerScheduleModelKey.qiblaDirection] as String,
       );
 
-  final String location;
-  final String nextPrayerLabel;
-  final String countdown;
-  final List<PrayerTimeModel> prayers;
-  final String qiblaDirection;
-
   Map<String, dynamic> toJson() => {
     PrayerScheduleModelKey.location: location,
     PrayerScheduleModelKey.nextPrayerLabel: nextPrayerLabel,
     PrayerScheduleModelKey.countdown: countdown,
     PrayerScheduleModelKey.prayers: prayers
-        .map((item) => item.toJson())
+        .map((item) => (item as PrayerTimeModel).toJson())
         .toList(),
     PrayerScheduleModelKey.qiblaDirection: qiblaDirection,
   };

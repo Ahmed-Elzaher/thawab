@@ -1,8 +1,10 @@
-class QuranPageModel {
+import 'package:thawab/features/quran/domain/entities/quran_page_entity.dart';
+
+class QuranPageModel extends QuranPageEntity {
   const QuranPageModel({
-    required this.surahName,
-    required this.pageNumber,
-    required this.verses,
+    required super.surahName,
+    required super.pageNumber,
+    required super.verses,
   });
 
   factory QuranPageModel.fromJson(Map<String, dynamic> json) => QuranPageModel(
@@ -10,10 +12,6 @@ class QuranPageModel {
     pageNumber: (json[QuranPageModelKey.pageNumber] as num).toInt(),
     verses: List<String>.from(json[QuranPageModelKey.verses] as List<dynamic>),
   );
-
-  final String surahName;
-  final int pageNumber;
-  final List<String> verses;
 
   Map<String, dynamic> toJson() => {
     QuranPageModelKey.surahName: surahName,

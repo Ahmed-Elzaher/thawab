@@ -2,10 +2,10 @@ class AzkarCategoryEntity {
   const AzkarCategoryEntity({
     required this.id,
     required this.name,
-    required this.description,
+    required this.entryCount,
   });
 
   final String id;
   final String name;
-  final String description;
+  final int entryCount;
 }

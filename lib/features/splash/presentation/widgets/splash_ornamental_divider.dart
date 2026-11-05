@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashOrnamentalDivider extends StatelessWidget {
   const SplashOrnamentalDivider({super.key});
@@ -10,13 +11,16 @@ class SplashOrnamentalDivider extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(width: 44, child: Divider(color: colors.outline)),
-        const SizedBox(width: 8),
+        SizedBox(
+          width: 44.w,
+          child: Divider(color: colors.outline),
+        ),
+        SizedBox(width: 8.w),
         Transform.rotate(
           angle: .785398,
           child: SizedBox(
-            width: 6,
-            height: 6,
+            width: 6.w,
+            height: 6.h,
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: colors.surface,
@@ -25,8 +29,11 @@ class SplashOrnamentalDivider extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 8),
-        SizedBox(width: 44, child: Divider(color: colors.outline)),
+        SizedBox(width: 8.w),
+        SizedBox(
+          width: 44.w,
+          child: Divider(color: colors.outline),
+        ),
       ],
     );
   }

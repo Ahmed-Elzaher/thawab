@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:thawab/core/utils/app_spacing.dart';
 
 class SectionTitle extends StatelessWidget {
   const SectionTitle(this.text, {super.key, this.trailing});
@@ -8,7 +10,10 @@ class SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 20, bottom: 10),
+    padding: EdgeInsets.only(
+      top: AppSpacing.sectionTop.h,
+      bottom: AppSpacing.sectionBottom.h,
+    ),
     child: Row(
       children: [
         Expanded(

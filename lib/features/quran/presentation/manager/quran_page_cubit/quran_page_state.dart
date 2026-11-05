@@ -17,7 +17,7 @@ final class QuranPageLoading extends QuranPageState {
 final class QuranPageSuccess extends QuranPageState {
   const QuranPageSuccess({required this.items});
 
-  final List<QuranPageModel> items;
+  final List<QuranPageEntity> items;
 
   @override
   List<Object?> get props => [items];

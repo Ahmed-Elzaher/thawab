@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:thawab/l10n/generated/app_localizations.dart';
 import 'package:thawab/core/routing/app_routes.dart';
-import 'package:thawab/core/utils/app_colors.dart';
+import 'package:thawab/core/utils/app_navigation_index.dart';
 import 'package:thawab/features/quran/presentation/manager/surah_cubit/surah_cubit.dart';
-import 'package:thawab/features/quran/data/models/surah_model.dart';
+import 'package:thawab/features/quran/domain/entities/surah_entity.dart';
 import 'package:thawab/core/widgets/app_screen.dart';
 
 class QuranIndexView extends StatefulWidget {
   const QuranIndexView({super.key, this.surahs = const []});
 
-  final List<SurahModel> surahs;
+  final List<SurahEntity> surahs;
 
   @override
   State<QuranIndexView> createState() => _QuranIndexViewState();
@@ -22,65 +24,73 @@ class _QuranIndexViewState extends State<QuranIndexView> {
   @override
   Widget build(BuildContext context) => BlocBuilder<SurahCubit, SurahState>(
     builder: (context, state) {
+      final strings = S.of(context);
       final loadedSurahs = state is SurahSuccess && state.items.isNotEmpty
           ? state.items
           : widget.surahs;
       final surahs = loadedSurahs.where((item) => item.name.contains(_query));
       return AppScreen(
-        title: 'فهرس السور',
-        bottomNavigationBar: const AppBottomBar(index: 0),
+        title: strings.quranIndexTitle,
+        bottomNavigationBar: const AppBottomBar(
+          index: AppNavigationIndex.quran,
+        ),
         children: [
           TextField(
-            textDirection: TextDirection.rtl,
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.search),
-              hintText: 'ابحث عن سورة أو آية...',
+              hintText: strings.surahSearchHint,
               filled: true,
               fillColor: Theme.of(context).colorScheme.surface,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderRadius: BorderRadius.circular(14.r),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderRadius: BorderRadius.circular(14.r),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
               ),
             ),
             onChanged: (value) => setState(() => _query = value),
           ),
           SectionTitle(
-            'سور القرآن الكريم',
-            trailing: Text('(${surahs.length} سورة)'),
+            strings.quranSurahs,
+            trailing: Text('(${strings.surahCount(surahs.length)})'),
           ),
           if (surahs.isEmpty)
             FlatCard(
               child: ContentStateMessage(
                 isLoading: state is SurahLoading || state is SurahInitial,
                 errorMessage: state is SurahFailure ? state.message : null,
-                emptyMessage: 'ستظهر السور بعد تحميل بيانات المصحف.',
+                emptyMessage: strings.quranSurahsUnavailable,
               ),
             )
           else
             ...surahs.map(
               (surah) => Card(
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                   onTap: () =>
                       context.push(AppRoutes.kQuranReaderView, extra: surah),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 18,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 18.h,
                     ),
                     child: Row(
                       children: [
                         Container(
-                          width: 48,
-                          height: 48,
+                          width: 48.w,
+                          height: 48.w,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: AppColors.quranSurface,
-                            borderRadius: BorderRadius.circular(14),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(14.r),
                           ),
                           child: Text(
                             '${surah.number}',
@@ -88,7 +98,7 @@ class _QuranIndexViewState extends State<QuranIndexView> {
                                 ?.copyWith(fontWeight: FontWeight.w700),
                           ),
                         ),
-                        const SizedBox(width: 14),
+                        SizedBox(width: 14.w),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,9 +108,9 @@ class _QuranIndexViewState extends State<QuranIndexView> {
                                 style: Theme.of(context).textTheme.titleLarge
                                     ?.copyWith(fontWeight: FontWeight.w700),
                               ),
-                              const SizedBox(height: 4),
+                              SizedBox(height: 4.h),
                               Text(
-                                '${surah.revelationType} · ${surah.verseCount} آية',
+                                '${surah.revelationType} · ${strings.verseCount(surah.verseCount)}',
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(
                                       color: Theme.of(context)

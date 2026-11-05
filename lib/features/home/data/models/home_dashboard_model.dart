@@ -1,11 +1,13 @@
-class HomeDashboardModel {
+import 'package:thawab/features/home/domain/entities/home_dashboard_entity.dart';
+
+class HomeDashboardModel extends HomeDashboardEntity {
   const HomeDashboardModel({
-    required this.hijriDate,
-    required this.nextPrayer,
-    required this.prayerTime,
-    required this.remainingTime,
-    required this.readingResume,
-    required this.readingProgress,
+    required super.hijriDate,
+    required super.nextPrayer,
+    required super.prayerTime,
+    required super.remainingTime,
+    required super.readingResume,
+    required super.readingProgress,
   });
 
   factory HomeDashboardModel.fromJson(Map<String, dynamic> json) =>
@@ -18,13 +20,6 @@ class HomeDashboardModel {
         readingProgress: (json[HomeDashboardModelKey.readingProgress] as num)
             .toDouble(),
       );
-
-  final String hijriDate;
-  final String nextPrayer;
-  final String prayerTime;
-  final String remainingTime;
-  final String readingResume;
-  final double readingProgress;
 
   Map<String, dynamic> toJson() => {
     HomeDashboardModelKey.hijriDate: hijriDate,
